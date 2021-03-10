@@ -1,0 +1,268 @@
+{
+	"info": {
+		"_postman_id": "452dec34-73f5-41ec-84e2-d8e0c3cc1c5c",
+		"name": "Picture It - Auth",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "register user",
+			"item": [
+				{
+					"name": "register OK",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"email\", pm.variables.replaceIn('{{$randomEmail}}'));",
+									"pm.collectionVariables.set(\"password\", pm.variables.replaceIn('{{$randomPassword}}'));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Register new user', () => {",
+									"    const jsonData = pm.response.json()",
+									"    pm.response.to.have.status(201)",
+									"     ",
+									"    pm.expect(jsonData).to.have.property('id')",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"{{email}}\",\r\n    \"password\": \"{{password}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{AUTH_PATH}}register",
+							"host": [
+								"{{AUTH_PATH}}register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "register duplicate user",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Register duplicate user', () => {",
+									"    const jsonData = pm.response.json()",
+									"    pm.response.to.have.status(409)",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"{{email}}\",\r\n    \"password\": \"{{password}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{AUTH_PATH}}register",
+							"host": [
+								"{{AUTH_PATH}}register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "register incorrect user",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Register duplicate user', () => {",
+									"    const jsonData = pm.response.json()",
+									"    pm.response.to.have.status(409)",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"{{email}}\",\r\n    \"password\": \"{{password}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{AUTH_PATH}}register",
+							"host": [
+								"{{AUTH_PATH}}register"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "login user",
+			"item": [
+				{
+					"name": "login wrong credentials",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Login not registered user', () => {",
+									"",
+									"    pm.response.to.have.status(409)",
+									" ",
+									"})",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"{{$randomEmail}}\",\r\n    \"password\": \"{{$randomPassword}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{AUTH_PATH}}login",
+							"host": [
+								"{{AUTH_PATH}}login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login OK",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json()",
+									"",
+									"pm.test('Login successfully registered user', () => {",
+									"",
+									"    pm.response.to.have.status(200)",
+									"     ",
+									"    pm.expect(jsonData).to.have.property('access_token')",
+									" ",
+									"})",
+									"",
+									"pm.test(\"Validate JWT\", function () {",
+									"    function jwt_decode(a) {",
+									"        let parts = a.split('.') // header, payload, signature",
+									"        return JSON.parse(atob(parts[1]))",
+									"    }",
+									"",
+									"    //call your function to decode it",
+									"    let decodedData=jwt_decode(jsonData.access_token)",
+									"",
+									"    //print the decodedData to console to see the structure",
+									"    console.log(decodedData)",
+									"     ",
+									"    //validate it using pm expect",
+									"    //pm.expect(decodedData.iss).to.deep.equal(\"studentid\")",
+									"})",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"{{email}}\",\r\n    \"password\": \"{{password}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{AUTH_PATH}}login",
+							"host": [
+								"{{AUTH_PATH}}login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "email",
+			"value": ""
+		},
+		{
+			"key": "password",
+			"value": ""
+		}
+	]
+}
