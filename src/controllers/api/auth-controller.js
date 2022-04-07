@@ -86,7 +86,7 @@ export class AuthController {
         err.cause = error
       } else if (error.name === 'ValidationError') {
         // Validation error(s).
-        err = createError(400)
+        err = createError(400, error.message)
         err.cause = error
       }
 
