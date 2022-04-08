@@ -28,11 +28,10 @@ export class AuthController {
         sub: user.username,
         given_name: user.firstName,
         family_name: user.lastName,
-        email: user.email,
-        x_permission_level: user.permissionLevel
+        email: user.email
       }
 
-      const privateKey = Buffer.from(process.env.ACCESS_TOKEN_SECRET, 'base64')
+      const privateKey = Buffer.from(process.env.PRIVATE_KEY, 'base64')
 
       // Create access token.
       const accessToken = jwt.sign(payload, privateKey, {
@@ -68,8 +67,7 @@ export class AuthController {
         password: req.body.password,
         firstName: req.body.firstName,
         lastName: req.body.lastName,
-        email: req.body.email,
-        permissionLevel: 1
+        email: req.body.email
       })
 
       await user.save()
